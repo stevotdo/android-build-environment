@@ -136,8 +136,8 @@ RUN chown -R $RUN_USER:$RUN_USER $ANDROID
 WORKDIR $ANDROID
 
 # Repo
-curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > $BIN/repo
-chmod a+x $BIN/repo
+RUN curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > $BIN/repo
+RUN chmod a+x $BIN/repo
 
 USER $RUN_USER
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
