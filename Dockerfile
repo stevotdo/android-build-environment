@@ -55,7 +55,7 @@ RUN apt-get install -y \
   unzip \
   wget \
   zip \
-  zlib1g-dev:i386 \
+  zlib1g-dev \
   --no-install-recommends
 
 # Install Java
