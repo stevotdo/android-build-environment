@@ -2,7 +2,7 @@
 
 FROM ubuntu:14.04
 
-MAINTAINER Mobile Builds Eng "mobile-builds-eng@uber.com"
+MAINTAINER stevotdo "slayton1986@gmail.com"
 
 # Sets language to UTF8 : this works in pretty much all cases
 ENV LANG en_US.UTF-8
@@ -22,11 +22,14 @@ RUN apt-get dist-upgrade -y
 # Installing packages
 RUN apt-get install -y \
   autoconf \
+  bison \
   build-essential \
   bzip2 \
   curl \
+  g++-multilib \
   gcc \
   git \
+  gperf \
   groff \
   lib32stdc++6 \
   lib32z1 \
@@ -39,6 +42,7 @@ RUN apt-get install -y \
   libmpfr-dev \
   libxslt-dev \
   libxml2-dev \
+  libxml2-utils \
   m4 \
   make \
   ncurses-dev \
@@ -51,7 +55,7 @@ RUN apt-get install -y \
   unzip \
   wget \
   zip \
-  zlib1g-dev \
+  zlib1g-dev:i386 \
   --no-install-recommends
 
 # Install Java
@@ -91,6 +95,7 @@ ENV PATH $PATH:$ANDROID_SDK_HOME/platform-tools
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/23.0.2
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/24.0.0
 ENV PATH $PATH:$ANDROID_NDK_HOME
+ENV PATH $PATH:$BIN/repo
 
 # Export JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
@@ -104,7 +109,7 @@ ENV GRADLE_OPTS "-XX:+UseG1GC -XX:MaxGCPauseMillis=1000"
 RUN apt-get clean
 
 # Add build user account, values are set to default below
-ENV RUN_USER mobileci
+ENV RUN_USER android
 ENV RUN_UID 5089
 
 RUN id $RUN_USER || adduser --uid "$RUN_UID" \
@@ -120,9 +125,22 @@ RUN chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME
 # Creating project directories prepared for build when running
 # `docker run`
 ENV PROJECT /project
+ENV BIN /bin
+ENV ANDROID /android
 RUN mkdir $PROJECT
+RUN mkdir $BIN
+RUN mkdir $ANDROID
 RUN chown -R $RUN_USER:$RUN_USER $PROJECT
-WORKDIR $PROJECT
+RUN chown -R $RUN_USER:$RUN_USER $BIN
+RUN chown -R $RUN_USER:$RUN_USER $ANDROID
+WORKDIR $ANDROID
+
+# Repo
+curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > $BIN/repo
+chmod a+x $BIN/repo
 
 USER $RUN_USER
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
+
+# Export volumes
+VOLUME /android
