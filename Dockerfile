@@ -95,7 +95,7 @@ ENV PATH $PATH:$ANDROID_SDK_HOME/platform-tools
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/23.0.2
 ENV PATH $PATH:$ANDROID_SDK_HOME/build-tools/24.0.0
 ENV PATH $PATH:$ANDROID_NDK_HOME
-ENV PATH $PATH:$BIN/repo
+ENV PATH $PATH:$REPO
 
 # Export JAVA_HOME variable
 ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
@@ -125,19 +125,19 @@ RUN chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME
 # Creating project directories prepared for build when running
 # `docker run`
 ENV PROJECT /project
-ENV BIN /bin
+ENV REPO /android/repo
 ENV ANDROID /android
 RUN mkdir $PROJECT
-RUN mkdir $BIN
 RUN mkdir $ANDROID
+RUN mkdir $REPO
 RUN chown -R $RUN_USER:$RUN_USER $PROJECT
-RUN chown -R $RUN_USER:$RUN_USER $BIN
 RUN chown -R $RUN_USER:$RUN_USER $ANDROID
+RUN chown -R $RUN_USER:$RUN_USER $REPO
 WORKDIR $ANDROID
 
 # Repo
-RUN curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > $BIN/repo
-RUN chmod a+x $BIN/repo
+RUN curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > $REPO
+RUN chmod a+x $REPO
 
 USER $RUN_USER
 RUN echo "sdk.dir=$ANDROID_HOME" > local.properties
