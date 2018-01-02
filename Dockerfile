@@ -125,18 +125,18 @@ RUN chmod -R a+rx $ANDROID_HOME $ANDROID_SDK_HOME $ANDROID_NDK_HOME
 # Creating project directories prepared for build when running
 # `docker run`
 ENV PROJECT /project
-ENV REPO /android/repo
+#ENV REPO /android/repo
 ENV ANDROID /android
 RUN mkdir $PROJECT
 RUN mkdir $ANDROID
 RUN mkdir $REPO
 RUN chown -R $RUN_USER:$RUN_USER $PROJECT
 RUN chown -R $RUN_USER:$RUN_USER $ANDROID
-RUN chown -R $RUN_USER:$RUN_USER $REPO
+#RUN chown -R $RUN_USER:$RUN_USER $REPO
 WORKDIR $ANDROID
 
 # Repo
-RUN curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > $REPO
+RUN curl http://commondatastorage.googleapis.com/git-repo-downloads/repo > /android/repo
 RUN chmod a+x $REPO
 
 USER $RUN_USER
